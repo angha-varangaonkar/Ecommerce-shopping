@@ -1,74 +1,83 @@
 import React from 'react';
-import logo from '../../assets/logo1.png';
-import { AiOutlineUser } from 'react-icons/ai';
+import logo from '../../assets/G2.png';
+import { AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
 import { HiOutlineShoppingBag } from 'react-icons/hi2';
-import { GoHeart } from 'react-icons/go';
+import { GoSignOut } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import Navitems from './Navitems';
 import { NavData } from './data';
-import { GoSignOut } from "react-icons/go";
+import { logout } from '../../redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import {logout} from './../../redux/userSlice'
+import { useNavigate } from 'react-router-dom';
+
 function Navbar() {
- const name = localStorage.getItem('name')
- const dispatch = useDispatch()
- const {totalQuantity} = useSelector((state)=>state.cart)
- const handleLogOut = () => {
-  dispatch(logout())
- }
+  const { totalQuantity } = useSelector((state) => state.cart);
+  const name = localStorage.getItem('name');
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(logout())
+   }
   return (
-    <header className="p-4 sticky top-0 z-50  bg-white border border-gray-200">
+    <header className="p-2 sticky top-0 z-50 bg-white border border-gray-200 shadow-lg">
       <div>
-        {/* //firstrow */}
-        <div className="flex justify-between items-center p-2 mb-6">
+        {/* First Row */}
+        <div className="flex justify-between items-center p-1 mb-4">
           <div className="flex items-center space-x-2">
-            <img src={logo} className="h-8" />
-            <p className="text-xl tracking-wide font-semibold">Ecommerce</p>
+            {/* Logo */}
+            <img 
+              src={logo} 
+              className="h-16 w-16 shadow-lg rounded-full border-2 border-gray-300" 
+              alt="Logo" 
+            />
+            <p className="text-3xl tracking-wide font-semibold">GrabGoods</p>
           </div>
 
-          <div className="w-96">
+          <div className="w-80 relative">
+            {/* Search Input with Icon */}
             <input
-              className="w-full p-2 font-normal bg-white border border-gray-500 rounded-none"
+              className="w-full p-2 pl-10 font-normal bg-white border border-gray-500 rounded-full focus:outline-none focus:ring focus:border-blue-300"
               type="text"
               placeholder="Search"
             />
+            <AiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
 
-          <div className="flex items-center space-x-10">
-
-              <Link to="/profile">
-              <AiOutlineUser />
-              <span className="text-xs font-medium hover:underline transition-all duration-200">
-               {name ? name : 'User'}
+          <div className="flex items-center space-x-6">
+            <Link to="/profile" className="group flex items-center space-x-1 hover:text-indigo-600 transition-all duration-200">
+              <AiOutlineUser className="text-xl group-hover:scale-110 transition-all duration-200" />
+              <span className="text-sm font-medium group-hover:underline">
+                {name ? name : 'User'}
               </span>
             </Link>
-           
-            <Link to="/cart" className='relative'>
-              <HiOutlineShoppingBag />
-              <span className="text-xs font-medium hover:underline transition-all duration-200">
-                Cart 
-              </span>
-{totalQuantity > 0 ? <span className='h-4 w-4 flex top-[-11px] right-[2px] items-center text-[9px] p-1 rounded-full justify-center bg-lime-500 absolute'>{totalQuantity}</span> : null }
- 
-             </Link>
-            
-           
 
-             <Link onClick={handleLogOut}>
-           <GoSignOut />
-              <span className="text-xs font-medium hover:underline transition-all duration-200">
-               Log-Out
-              </span>
+            <Link to="/cart" className="group relative flex items-center space-x-1 hover:text-indigo-600 transition-all duration-200">
+              <HiOutlineShoppingBag className="text-2xl group-hover:scale-110 transition-all duration-200" />
+              <span className="text-sm font-medium group-hover:underline">Cart</span>
+              {totalQuantity > 0 && (
+                <span className="absolute -top-3 -right-3 bg-green-500 text-white rounded-full text-xs px-2 py-0.5">
+                  {totalQuantity}
+                </span>
+              )}
+            </Link>
+
+            <Link onClick={handleLogOut} className="group flex items-center space-x-1 hover:text-indigo-600 transition-all duration-200">
+              <GoSignOut className="text-2xl group-hover:scale-110 transition-all duration-200" />
+              <span className="text-sm font-medium group-hover:underline">Log Out</span>
             </Link>
           </div>
         </div>
 
-        {/* second */}
+        {/* Second Row */}
         <div>
           <div className="flex justify-center items-center">
-            <ul className="flex space-x-10">
+            <ul className="flex space-x-6">
               {NavData.map((items) => (
-                <Navitems to={items.url} text={items.text} />
+                <Navitems
+                  key={items.text}
+                  to={items.url}
+                  text={items.text}
+                  className="group hover:text-indigo-600 transition-all duration-200"
+                />
               ))}
             </ul>
           </div>
